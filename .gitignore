@@ -8,3 +8,5 @@
 .idea/runConfigurations/
 .idea/vcs.xml
 
+node_modules/
+.idea
