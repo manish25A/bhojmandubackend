@@ -14,7 +14,15 @@
   },
   "main": "app.js",
   "devDependencies": {},
-  "author": "",
+  "author": "Manish BC",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/softwarica-github/t2---backend-api-manish25A.git"
+  },
+  "bugs": {
+    "url": "https://github.com/softwarica-github/t2---backend-api-manish25A/issues"
+  },
+  "homepage": "https://github.com/softwarica-github/t2---backend-api-manish25A#readme",
   "description": ""
 }
