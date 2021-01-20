@@ -5,5 +5,6 @@ const Product = mongoose.model('Seller', {
     email: {type: String},
     mobileNumber: {type: String},
     password: {type: String},
+    resName:{type:String}
 });
 module.exports = Product;
