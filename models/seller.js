@@ -1,10 +1,25 @@
 const mongoose = require('mongoose');
-const Product = mongoose.model('Seller', {
-    fName: {type: String},
-    lName: {type: String},
-    email: {type: String},
-    mobileNumber: {type: String},
-    password: {type: String},
-    resName:{type:String}
+const Seller = mongoose.model('Seller', {
+	SellerFullName: {
+		type: String,
+		require: true,
+	},
+	SellerGender: {
+		type: String,
+		require: true,
+	},
+	SellerEmail: {
+		type: String,
+		require: true,
+		unique: true,
+	},
+	SellerPhone: {
+		type: String,
+		require: true,
+	},
+	SellerPassword: {
+		type: String,
+		require: true,
+	},
 });
-module.exports = Product;
+module.exports = Seller;
