@@ -2,7 +2,7 @@ const multer = require('multer');
 
 const storage = multer.diskStorage({
 	destination: function (req, file, cb) {
-		cb(null, './images/userImage');
+		cb(null, './images/uploads');
 	},
 	filename: function (req, file, cb) {
 		cb(null, Date.now() + file.originalname);
@@ -48,7 +48,7 @@ fileUpload = (req, res) => {
 			res.status(200);
 			res.json({
 				success: true,
-				message: 'FIle uploaded ',
+				message: 'File uploaded ',
 			});
 		}
 	});

@@ -4,7 +4,7 @@ const Product = mongoose.model('Product', {
 		type: String,
 		require: true,
 	},
-	ProductSIze: {
+	ProductSize: {
 		type: String,
 		require: true,
 	},

@@ -1,4 +1,3 @@
-
 const {check, validationResult} = require('express-validator');
 const auth = function (req, res,next) {
         check('fName', 'Buyer Full name must be mentioned').not().isEmpty(),
