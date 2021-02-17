@@ -1,29 +1,32 @@
 const mongoose = require('mongoose');
-const Buyer = mongoose.model('Buyer', {
-	BuyerFullName: {
+const Customer = mongoose.model('Customer', {
+	CustomerFullName: {
 		type: String,
 		required: true,
 	},
-	BuyerAge: {
+	CustomerAge: {
 		type: Number,
 		required: true,
 	},
-	BuyerEmail: {
+	CustomerEmail: {
 		type: String,
 		required: true,
 		unique: true,
 	},
-	BuyerPhone: {
+	CustomerPhone: {
 		type: String,
 		required: true,
 	},
-	BuyerGender: {
+	CustomerGender: {
 		type: String,
 		required: true,
 	},
-	BuyerPassword: {
+	CustomerPassword: {
 		type: String,
 		required: true,
+	},
+		CustomerImage: {
+		type: Image,
 	},
 });
-module.exports = Buyer;
+module.exports = Customer;
