@@ -1,10 +1,14 @@
 const mongoose = require('mongoose');
-const Seller = mongoose.model('Seller', {
-	SellerFullName: {
+const Seller = mongoose.model('Resturant', {
+	ResturantFullName: {
 		type: String,
 		require: true,
 	},
-	SellerGender: {
+	ResturantAddress: {
+		type: String,
+		require: true,
+	},
+	ResturantDescription: {
 		type: String,
 		require: true,
 	},
@@ -19,6 +23,10 @@ const Seller = mongoose.model('Seller', {
 	},
 	SellerPassword: {
 		type: String,
+		require: true,
+	},	
+	SellerImage: {
+		type: Image,
 		require: true,
 	},
 });

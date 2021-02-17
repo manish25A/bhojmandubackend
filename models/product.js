@@ -4,27 +4,11 @@ const Product = mongoose.model('Product', {
 		type: String,
 		require: true,
 	},
-	ProductSize: {
-		type: String,
-		require: true,
-	},
-	ProductColor: {
-		type: String,
-		require: true,
-	},
-	ProductImage: {
-		type: String,
-		require: true,
-	},
-	ProductType: {
+	ProductDescription: {
 		type: String,
 		require: true,
 	},
 	ProductPrice: {
-		type: String,
-		require: true,
-	},
-	ProductDescription: {
 		type: String,
 		require: true,
 	},
