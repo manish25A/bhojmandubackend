@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Seller = mongoose.model('Resturant', {
+const Resturant = mongoose.model('Resturant', {
 	ResturantFullName: {
 		type: String,
 		require: true,
@@ -12,22 +12,22 @@ const Seller = mongoose.model('Resturant', {
 		type: String,
 		require: true,
 	},
-	SellerEmail: {
+	ResturantEmail: {
 		type: String,
 		require: true,
 		unique: true,
 	},
-	SellerPhone: {
+	ResturantPhone: {
 		type: String,
 		require: true,
 	},
-	SellerPassword: {
+	ResturantPassword: {
 		type: String,
 		require: true,
 	},	
-	SellerImage: {
+	ResturantLogo: {
 		type: Image,
 		require: true,
 	},
 });
-module.exports = Seller;
+module.exports = Resturant;

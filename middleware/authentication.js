@@ -1,7 +1,7 @@
 const { check, validationResult } = require('express-validator');
 const jwt = require('jsonwebtoken');
 const Seller = require('../model/SellerModel');
-const Buyer = require('../model/BuyerModel');
+const customer = require('../model/customerModel');
 
 module.exports.verifySeller = function (req, res, next) {
 	try {
@@ -21,14 +21,14 @@ module.exports.verifySeller = function (req, res, next) {
 	}
 };
 
-module.exports.verifyBuyer = function (req, res, next) {
+module.exports.verifycustomer = function (req, res, next) {
 	try {
 		const token = req.headers.authorization.split(' ')[1];
 		const decodeData = jwt.verify(token, 'secretkey');
-		Buyer.findOne({ _id: decodeData.buyerId })
-			.then(function (BuyerAuthenticateData) {
+		customer.findOne({ _id: decodeData.customerId })
+			.then(function (customerAuthenticateData) {
 				////validated
-				req.buyer = BuyerAuthenticateData;
+				req.customer = customerAuthenticateData;
 				next();
 			})
 			.catch(function (error) {
