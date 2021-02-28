@@ -25,11 +25,12 @@ const fileFilter = function (req, file, cb) {
 let obj = {
 	storage: storage,
 	limits: {
-		fileSize: 2 * 1024 * 1024,
+		fileSize: 7340032,
 	},
 	fileFilter: fileFilter,
 };
-const upload = multer(obj).single('file');
+const upload = multer().single('file');
+
 fileUpload = (req, res) => {
 	upload(req, res, function (err) {
 		if (err) {
@@ -46,7 +47,7 @@ fileUpload = (req, res) => {
 				res.json('file not found');
 			}
 			res.status(200);
-			res.json({
+		res.json({
 				success: true,
 				message: 'File uploaded ',
 			});

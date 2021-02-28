@@ -14,7 +14,7 @@ const Product = mongoose.model("Product", {
   },
   ProductImage: {
     type: String,
-	require:true
+	  require:true
   },
 });
 module.exports = Product;

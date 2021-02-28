@@ -3,22 +3,24 @@ const router = express.Router();
 const Product = require('../models/product');
 const { check, validationResult } = require('express-validator');
 const authenticateSeller = require('../middleware/authentication');
+const fileUpload =require('../middleware/imageUpload');
 
 ////post vaneko insert ko lagi
 /////inserting product
 router.post(
 	'/product/insert',
-	authenticateSeller.verifySeller,
+	fileUpload,
+	authenticateSeller.verifycustomer,
 	function (req, res) {
 		const ProductName = req.body.ProductName;
 		const ProductDescription = req.body.ProductDescription;
-		const ProductImage = req.body.ProductImage;
+		const ProductImage = req.file.path;
 		const ProductPrice = req.body.ProductPrice;
 		const ProductData = new Product({
-			ProductName,
-			ProductDescription,
-			ProductImage,
-			ProductPrice,
+			ProductName:ProductName,
+			ProductDescription:ProductDescription,
+			ProductImage:ProductImage,
+			ProductPrice:ProductPrice,
 		});
 		////then vaneko success vayo vaney
 		////catch vanya error vayo vaney
