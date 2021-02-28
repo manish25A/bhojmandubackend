@@ -1,9 +1,29 @@
 const mongoose = require('mongoose');
 const Customer = mongoose.model('Customer', {
-    fName: { type: String }.toString().trim(),
-    lName: { type: String },
-    email: { type: String },
-    mobileNumber: { type: String },
-    password: { type: String },
+  CustomerFullName: {
+    type: String,
+    required: true,
+  },
+  CustomerAge: {
+    type: Number,
+    required: true,
+  },
+  CustomerEmail: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  CustomerPhone: {
+    type: String,
+    required: true,
+  },
+  CustomerGender: {
+    type: String,
+    required: true,
+  },
+  CustomerPassword: {
+    type: String,
+    required: true,
+  },
 });
 module.exports = Customer;
