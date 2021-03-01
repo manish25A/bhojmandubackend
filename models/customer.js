@@ -3,6 +3,7 @@ const Customer = mongoose.model('Customer', {
   CustomerFullName: {
     type: String,
     required: true,
+    trim:true,
   },
   CustomerAge: {
     type: Number,
@@ -12,6 +13,7 @@ const Customer = mongoose.model('Customer', {
     type: String,
     required: true,
     unique: true,
+    trim:true,
   },
   CustomerPhone: {
     type: String,
