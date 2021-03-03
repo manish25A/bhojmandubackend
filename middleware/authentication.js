@@ -1,7 +1,7 @@
 const { check, validationResult } = require('express-validator');
 const jwt = require('jsonwebtoken');
-const Seller = require('../model/SellerModel');
-const customer = require('../model/customerModel');
+const Seller = require('../models/Resturants');
+const customer = require('../models/customer');
 
 module.exports.verifySeller = function (req, res, next) {
 	try {

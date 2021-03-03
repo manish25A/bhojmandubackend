@@ -26,7 +26,7 @@ const Resturant = mongoose.model('Resturant', {
 		require: true,
 	},	
 	ResturantLogo: {
-		type: Image,
+		type: String,
 		require: true,
 	},
 });
