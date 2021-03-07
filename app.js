@@ -1,30 +1,55 @@
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-const bodyParser = require('body-parser');
-var logger = require('morgan');
-var cors=require('cors');
-// importing db
-var db = require('./Database/database')
+const express = require("express");
 
-//importing router
-var indexRouter = require('./routes/index');
-var customerRouter = require('./routes/Customer')
-var productRouter = require('./routes/productRoute')
-//using
-var app = express();
-app.use(logger('dev'));
-app.use(express.json());
-app.use(bodyParser.json())
+const morgan = require("morgan")
+const fileupload = require("express-fileupload");
+const connectDB = require("./bin/database");
+const cookieParser = require("cookie-parser");
+const path = require("path");
+const colors = require("colors");
+const errorHandler = require("./middleware/customizederror");
+const dotenv = require("dotenv");
+
+dotenv.config({
+    path: "./bin/config.env",
+});
+
+
+// Connect to mongoDB database
+connectDB();
+
+// Load routes files
+const customerRoute = require("./routes/customerRouter");
+const productRoute =require("./routes/productRouter")
+const cors = require("cors");
+const {
+    urlencoded
+} = require("express");
+
+// initialize out app variable with express
+const app = express();
+
+//logger
+app.use(morgan("dev"));
+//using cors for react
 app.use(cors());
-app.use(express.urlencoded({extended: true}));
-app.use(bodyParser.urlencoded({ extended: true } ));
+//Body parser , which allows to receive body data from postman
+app.use(express.json());
+app.use(express.urlencoded({
+    urlencoded: true,
+    extended: false
+}))
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
 
-//using router
-app.use(indexRouter);
-app.use(customerRouter);
-app.use(productRouter);
+//File upload
+app.use(fileupload());
+
+// Set static folder
+app.use(express.static(path.join(__dirname, "public")));
+
+// Mount routes
+app.use("/customer/auth/", customerRoute);
+app.use("/product/",productRoute);
+// To use the custom error message
+app.use(errorHandler);
 
 module.exports = app;
