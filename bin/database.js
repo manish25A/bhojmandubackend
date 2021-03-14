@@ -6,12 +6,18 @@ const connectDB = async() => {
         useCreateIndex: true,
         useFindAndModify: false,
         useUnifiedTopology: true,
-      });
-    
-      console.log(
+    });
+    function onListening() {
+        var addr = conn.connection.host;
+        var bind = typeof addr === 'string'
+            ? 'pipe ' + addr
+            : 'port ' + addr.port;
+        debug('Listening on ' + bind);
+    }
+
+    console.log(
         `MongoDB connected to : ${conn.connection.host}`.cyan.underline.bold
-      );
-    };
-    
-    module.exports = connectDB;
-    
+    );
+};
+
+module.exports = connectDB;

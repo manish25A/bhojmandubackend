@@ -1,47 +1,47 @@
 const asyncHandler = require("../middleware/async");
-const ErrorResponse = require("../utils/errorResponse");
-const User = require("../model/user");
+const ErrorResponse = require("../utils/errorResponse.js");
+const Customer = require("../models/customer");
 const crypto = require("crypto");
 
-//--------------------------REGISTER USER-----------------
+//--------------------------REGISTER customer-----------------
 
 exports.register = asyncHandler(async (req, res, next) => {
-  const { fname,lname,username,password } = req.body;
-  const user = await User.create({
+  const { fname,lname,email,password } = req.body;
+  const customer = await customer.create({
    fname,
    lname,
-   username,
+   email,
    password,
   });
 
-  sendTokenResponse(user, 200, res);
+  sendTokenResponse(customer, 200, res);
 });
 
 //-------------------LOGIN-------------------
 
 exports.login = asyncHandler(async (req, res, next) => {
-  const { username, password } = req.body;
+  const { email, password } = req.body;
 
-  if (!username || !password) {
-    return next(new ErrorResponse("Please provide username and password"), 400);
+  if (!email || !password) {
+    return next(new ErrorResponse("Please provide customername and password"), 400);
   }
 
-  // Check user
-  const user = await User.findOne({ username: username }).select("+password");
+  // Check customer
+  const customer = await Customer.findOne({ email: email }).select("+password");
   //because in password field we have set the property select:false , but here we need as password so we added + sign
 
-  if (!user) {
+  if (!customer) {
     res
     .status(201)
     .json({
       success: false,
-      message: 'Invalid credentails user',
+      message: 'Invalid credentails customer',
     });  
   }
 
-  // const isMatch = await user.matchPassword(password); // decrypt password
+  // const isMatch = await customer.matchPassword(password); // decrypt password
   
-  if (user.password!= password) {
+  if (customer.password!= password) {
     res
     .status(201)
     .json({
@@ -50,7 +50,7 @@ exports.login = asyncHandler(async (req, res, next) => {
     });
   }
  else{
-  sendTokenResponse(user, 200, res);
+  sendTokenResponse(customer, 200, res);
 }
 });
 
@@ -63,24 +63,24 @@ exports.logout = asyncHandler(async (req, res, next) => {
 
   res.status(200).json({
     success: true,
-    data: "User Logged out",
+    data: "customer Logged out",
   });
 });
 
-//-------------------------CURRENT USER DETAILS-----------
+//-------------------------CURRENT customer DETAILS-----------
 
 exports.getMe = asyncHandler(async (req, res, next) => {
-  const user = await User.findById(req.user.id);
+  const customer = await customer.findById(req.customer.id);
   res.status(200).json({
     success: true,
-    data: user,
+    data: customer,
   });
 });
 
 // Get token from model , create cookie and send response
-const sendTokenResponse = (user, statusCode, res) => {
+const sendTokenResponse = (customer, statusCode, res) => {
  
-  const token = user.getSignedJwtToken();
+  const token = customer.getSignedJwtToken();
 
   const options = {
     //Cookie will expire in 30 days

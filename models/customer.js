@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-const customerSchema = new mongoose.Schema({
+const CustomerSchema = new mongoose.Schema({
     fname : {
         type : String,
         required : [true,'Enter first name']
@@ -57,4 +57,4 @@ CustomerSchema.methods.getSignedJwtToken = function () {
     return resetToken;
   };
   
-  module.exports = mongoose.model("Customer", customerSchema);
+  module.exports = mongoose.model("Customer", CustomerSchema);
