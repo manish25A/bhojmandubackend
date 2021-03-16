@@ -7,7 +7,7 @@ const crypto = require("crypto");
 
 exports.register = asyncHandler(async (req, res, next) => {
   const { fname,lname,email,password } = req.body;
-  const customer = await customer.create({
+  const customer = await Customer.create({
    fname,
    lname,
    email,
@@ -23,7 +23,7 @@ exports.login = asyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return next(new ErrorResponse("Please provide customername and password"), 400);
+    return next(new ErrorResponse("Please provide customer name and password"), 400);
   }
 
   // Check customer
@@ -35,7 +35,7 @@ exports.login = asyncHandler(async (req, res, next) => {
     .status(201)
     .json({
       success: false,
-      message: 'Invalid credentails customer',
+      message: 'Invalid credentials of customer',
     });  
   }
 
@@ -46,7 +46,7 @@ exports.login = asyncHandler(async (req, res, next) => {
     .status(201)
     .json({
       success: false,
-      message: 'Invalid credentails',
+      message: 'Invalid credentials',
     });
   }
  else{
