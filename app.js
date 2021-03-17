@@ -18,7 +18,7 @@ connectDB();
 
 // Load routes files
 const customerRoute = require("./routes/customerRoute");
-// const productRoute =require("./routes/productRoute")
+const productRoute =require("./routes/productRoute")
 
 const {
   urlencoded
@@ -41,7 +41,8 @@ app.use(cookieParser());
 //File upload
 app.use(fileupload());
 
-app.use("/customer/auth",customerRoute);
+app.use("/customer/auth/",customerRoute);
+app.use("/product/",productRoute);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
