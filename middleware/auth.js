@@ -2,7 +2,7 @@
 const jwt = require("jsonwebtoken");
 const asyncHandler = require("./async");
 const ErrorResponse = require("../utils/errorResponse.js");
-const User = require("../models/customer");
+const Customer = require("../models/customer");
 
 //Protect routes
 exports.protect = asyncHandler(async (req, res, next) => {
@@ -25,7 +25,7 @@ exports.protect = asyncHandler(async (req, res, next) => {
     //Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     // console.log(decoded);
-    req.user = await User.findById(decoded.id);
+    req.user = await Customer.findById(decoded.id);
     next();
   } catch (err) {
     return next(new ErrorResponse("Not authorized to access this route", 401));

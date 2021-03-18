@@ -1,5 +1,5 @@
 const ErrorResponse = require("../utils/errorResponse");
-const Student = require("../models/product");
+const Product = require("../models/product");
 const asyncHandler = require("../middleware/async");
 //To get the file name extension line .jpg,.png
 const path = require("path");
@@ -9,7 +9,7 @@ const path = require("path");
 
 exports.createProduct = asyncHandler(async (req, res, next) => {
 
-  const product = await Student.create({...req.body,vendor:req.user._id});
+  const product = await Product.create({...req.body,vendor:req.user._id});
 
   if (!product) {
     return next(new ErrorResponse("Error adding student"), 404);
@@ -37,7 +37,7 @@ exports.getProducts = asyncHandler(async (req, res, next) => {
 //-------------------Display all products of a vendor
 
 exports.getVendorProducts = asyncHandler(async (req, res, next) => {
-  const products = await Student.find({}).populate({path:'vendor',match:{fname:req.params.fname}});
+  const products = await Product.find({}).populate({path:'vendor',match:{fname:req.params.fname}});
 
   res.status(201).json({
     success: true,
@@ -49,32 +49,32 @@ exports.getVendorProducts = asyncHandler(async (req, res, next) => {
 // -----------------FIND Student BY ID-------------------
 
 exports.getStudentById = asyncHandler(async (req, res, next) => {
-  const student = await Student.findById({_id:req.params.id, vendor:req.user._id}).populate('customer');
+  const product = await Product.findById({_id:req.params.id, vendor:req.user._id}).populate('customer');
 
-  if (!student) {
+  if (!product) {
     return next(new ErrorResponse("Student not found"), 404);
   }
 
   res.status(200).json({
     success: true,
-    data: student,
+    data: product,
   });
 });
 
 // -----------------DELETE STUDENT------------------------
 
 exports.deleteStudent = asyncHandler(async (req, res, next) => {
-  const student = await Student.findById(req.params.id);
+  const product = await Product.findById(req.params.id);
 
-  if (!student) {
+  if (!product) {
     return next(new ErrorResponse(`No student found `), 404);
   }
 
-  await student.remove();
+  await product.remove();
 
   res.status(200).json({
     success: true,
-    count: student.length,
+    count: product.length,
     data: {},
   });
 });

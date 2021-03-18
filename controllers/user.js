@@ -41,7 +41,7 @@ exports.login = asyncHandler(async (req, res, next) => {
 
   // const isMatch = await customer.matchPassword(password); // decrypt password
   
-  if (customer.password!= password) {
+  if (customer.password!== password) {
     res
     .status(201)
     .json({
@@ -70,7 +70,7 @@ exports.logout = asyncHandler(async (req, res, next) => {
 //-------------------------CURRENT customer DETAILS-----------
 
 exports.getMe = asyncHandler(async (req, res, next) => {
-  const customer = await customer.findById(req.customer.id);
+  const customer = await Customer.findById(req.customer.id);
   res.status(200).json({
     success: true,
     data: customer,
