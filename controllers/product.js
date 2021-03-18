@@ -5,7 +5,7 @@ const asyncHandler = require("../middleware/async");
 const path = require("path");
 
 
-//--------------------CREATE Student------------------
+//--------------------CREATE product------------------
 
 exports.createProduct = asyncHandler(async (req, res, next) => {
 
@@ -26,6 +26,18 @@ exports.createProduct = asyncHandler(async (req, res, next) => {
 
 exports.getProducts = asyncHandler(async (req, res, next) => {
   const products = await Student.find({}).select('vendor');
+
+  res.status(201).json({
+    success: true,
+    count: products.length,
+    data: products,
+  });
+});
+
+//-------------------Display all products of a vendor
+
+exports.getVendorProducts = asyncHandler(async (req, res, next) => {
+  const products = await Student.find({}).populate({path:'vendor',match:{fname:req.params.fname}});
 
   res.status(201).json({
     success: true,

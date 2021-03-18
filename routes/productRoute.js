@@ -7,14 +7,18 @@ const {
     getStudentById,
     deleteStudent,
     StudentPhotoUpload,
+    getVendorProducts
 } = require("../controllers/product");
 
 const { protect } = require("../middleware/auth");
+
+router.route("/getProducts/:fname").get(getVendorProducts);
 
 router
     .route("/")
     .get(protect,getProducts)
     .post(protect,createProduct);
+
 
 router
     .route("/:id/photo")
