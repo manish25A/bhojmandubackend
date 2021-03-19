@@ -1,409 +1,107 @@
-// const Post = require('../models/Post');
-// const Author = require('../models/Author');
+const asyncHandler = require("../middleware/async");
+const ErrorResponse = require("../utils/errorResponse.js");
+const Vendor = require("../models/Vendor");
+const crypto = require("crypto");
 
-const Product = require('../models/product');
-const Vendor = require('../models/Vendor');
+//--------------------------REGISTER customer-----------------
 
-//Post Controllerconst Post = require('../models/Post');
-// const Vendor = require('../models/Ved');
+exports.vendorRegister = asyncHandler(async (req, res, next) => {
+    const { vendorName,vendorEmail,vendorPassword,vendorAddress } = req.body;
+    const vendor = await Vendor.create({
+        vendorName,
+        vendorEmail,
+        vendorPassword,
+        vendorAddress,
+    });
 
-//Post Controller
-module.exports = {
-    index:async (req,res)=>{
-    	try{
-    		let posts = await Post.find().populate('author');
-        	res.status(200).json(posts);
-    	}
-    	catch(error){
-        	res.status(400).json({message:"Could not fetch posts"});
-    	}
+    sendVendorTokenResponse(vendor, 200, res);
+});
 
-    },
-    store:(req,res)=>{
-    	let { title,description,category,author,body } = req.body;
-    	if(title && description && category && author && body){
+//-------------------LOGIN-------------------
 
-    		const post = new Post({
-    			title:title,
-    			description:description,
-    			category:category,
-				author:author,
-				body:body
-    		});
+exports.vendorLogin = asyncHandler(async (req, res, next) => {
+    const { vendorEmail, vendorPassword } = req.body;
 
-    		post.save()
-    			.then(async postdoc =>{
-					try{
-						await Author.findByIdAndUpdate(postdoc.author,{
-							$push:{posts:postdoc._id}
-						})
-
-					}catch(error){
-						res.status(400).json({message:"Could not save post"});
-					}
-
-    				res.status(200).json({
-    					message:"success"
-    				});
-    			}, error =>{
-    				res.status(400).json({
-    					message:"failed"
-    				});
-    			})
-
-
-    	} else {
-    		res.status(422).json({
-    			message:"invalid inputs"
-    		});
-    	}
-
-    },
-    show:async (req,res)=>{
-    	let { id } = req.params;
-    	if(id){
-    			try{
-    				let post = await Post.findById(id);
-    		    	res.status(200).json(post);
-    			}
-    			catch(error){
-    		    	res.status(400).json({message:"Could not fetch user"});
-    			}
-    	} else {
-    		res.status(422).json({
-    			message:"invalid inputs"
-    		});
-    	}
-
-    },
-    update:async (req,res)=>{
-    	let { id } = req.params;
-    	let { title,description,category,author,body } = req.body;
-
-    	if(id){
-    		if(title && description && category && author && body){
-    				try{
-    					let post = await Post.findByIdAndUpdate(id,{
-    						$set:{
-								title:title,
-								description:description,
-								category:category,
-								author:author,
-								body:body
-    						}
-    					});
-    					if(post){
-    			    		res.status(200).json({message:"Post Updated",post:post});
-    					} else {
-    						res.status(422).json({
-    							message:"Post not found"
-    						});
-    					}
-    				}
-    				catch(error){
-    			    	res.status(400).json({message:"Could not update post"});
-    				}
-    		} else {
-    			res.status(422).json({
-    				message:"invalid inputs"
-    			});
-    		}
-    	} else {
-    		res.status(422).json({
-    			message:"Invalid ID"
-    		});
-    	}
-
-    },
-    delete:async (req,res)=>{
-    	let { id } = req.params;
-    	if(id){
-    		try{
-    			let post = await Post.findByIdAndDelete(id);
-    			if(post){
-    				res.status(200).json({message:"Post Deleted",post:post});
-    			} else {
-    				res.status(422).json({
-    					message:"Post not found"
-    				});
-    			}
-
-    		}
-    		catch(error){
-				res.status(400).json({message:"Could not delete post"});
-    		}
-    	} else {
-    		res.status(422).json({
-    			message:"Invalid ID"
-    		});
-    	}
+    if (!vendorEmail || !vendorPassword) {
+        return next(new ErrorResponse("Please provide customer email and password"), 400);
     }
 
-};
-module.exports = {
-    index:async (req,res)=>{
-        try{
-            let posts = await Post.find().populate('author');
-            res.status(200).json(posts);
-        }
-        catch(error){
-            res.status(400).json({message:"Could not fetch posts"});
-        }
+    // Check customer
+    const vendor = await Vendor.findOne({ vendorEmail: vendorEmail }).select("+vendorPassword");
+    //because in password field we have set the property select:false , but here we need as password so we added + sign
 
-    },
-    store:(req,res)=>{
-        let { title,description,category,author,body } = req.body;
-        if(title && description && category && author && body){
-
-            const post = new Post({
-                title:title,
-                description:description,
-                category:category,
-                author:author,
-                body:body
+    if (!vendor) {
+        res
+            .status(201)
+            .json({
+                success: false,
+                message: 'Invalid credentials of vendor',
             });
-
-            post.save()
-                .then(async postdoc =>{
-                    try{
-                        await Author.findByIdAndUpdate(postdoc.author,{
-                            $push:{posts:postdoc._id}
-                        })
-
-                    }catch(error){
-                        res.status(400).json({message:"Could not save post"});
-                    }
-
-                    res.status(200).json({
-                        message:"success"
-                    });
-                }, error =>{
-                    res.status(400).json({
-                        message:"failed"
-                    });
-                })
-
-
-        } else {
-            res.status(422).json({
-                message:"invalid inputs"
-            });
-        }
-
-    },
-    show:async (req,res)=>{
-        let { id } = req.params;
-        if(id){
-            try{
-                let post = await Post.findById(id);
-                res.status(200).json(post);
-            }
-            catch(error){
-                res.status(400).json({message:"Could not fetch user"});
-            }
-        } else {
-            res.status(422).json({
-                message:"invalid inputs"
-            });
-        }
-
-    },
-    update:async (req,res)=>{
-        let { id } = req.params;
-        let { title,description,category,author,body } = req.body;
-
-        if(id){
-            if(title && description && category && author && body){
-                try{
-                    let post = await Post.findByIdAndUpdate(id,{
-                        $set:{
-                            title:title,
-                            description:description,
-                            category:category,
-                            author:author,
-                            body:body
-                        }
-                    });
-                    if(post){
-                        res.status(200).json({message:"Post Updated",post:post});
-                    } else {
-                        res.status(422).json({
-                            message:"Post not found"
-                        });
-                    }
-                }
-                catch(error){
-                    res.status(400).json({message:"Could not update post"});
-                }
-            } else {
-                res.status(422).json({
-                    message:"invalid inputs"
-                });
-            }
-        } else {
-            res.status(422).json({
-                message:"Invalid ID"
-            });
-        }
-
-    },
-    delete:async (req,res)=>{
-        let { id } = req.params;
-        if(id){
-            try{
-                let post = await Post.findByIdAndDelete(id);
-                if(post){
-                    res.status(200).json({message:"Post Deleted",post:post});
-                } else {
-                    res.status(422).json({
-                        message:"Post not found"
-                    });
-                }
-
-            }
-            catch(error){
-                res.status(400).json({message:"Could not delete post"});
-            }
-        } else {
-            res.status(422).json({
-                message:"Invalid ID"
-            });
-        }
     }
 
-};const Post = require('../models/Post');
-const Author = require('../models/Author');
+    // const isMatch = await customer.matchPassword(password); // decrypt password
 
-//Post Controller
-module.exports = {
-    index:async (req,res)=>{
-    	try{
-    		let posts = await Post.find().populate('author');
-        	res.status(200).json(posts);
-    	}
-    	catch(error){
-        	res.status(400).json({message:"Could not fetch posts"});
-    	}
-
-    },
-    store:(req,res)=>{
-    	let { title,description,category,author,body } = req.body;
-    	if(title && description && category && author && body){
-
-    		const post = new Post({
-    			title:title,
-    			description:description,
-    			category:category,
-				author:author,
-				body:body
-    		});
-
-    		post.save()
-    			.then(async postdoc =>{
-					try{
-						await Author.findByIdAndUpdate(postdoc.author,{
-							$push:{posts:postdoc._id}
-						})
-
-					}catch(error){
-						res.status(400).json({message:"Could not save post"});
-					}
-
-    				res.status(200).json({
-    					message:"success"
-    				});
-    			}, error =>{
-    				res.status(400).json({
-    					message:"failed"
-    				});
-    			})
-
-
-    	} else {
-    		res.status(422).json({
-    			message:"invalid inputs"
-    		});
-    	}
-
-    },
-    show:async (req,res)=>{
-    	let { id } = req.params;
-    	if(id){
-    			try{
-    				let post = await Post.findById(id);
-    		    	res.status(200).json(post);
-    			}
-    			catch(error){
-    		    	res.status(400).json({message:"Could not fetch user"});
-    			}
-    	} else {
-    		res.status(422).json({
-    			message:"invalid inputs"
-    		});
-    	}
-
-    },
-    update:async (req,res)=>{
-    	let { id } = req.params;
-    	let { title,description,category,author,body } = req.body;
-
-    	if(id){
-    		if(title && description && category && author && body){
-    				try{
-    					let post = await Post.findByIdAndUpdate(id,{
-    						$set:{
-								title:title,
-								description:description,
-								category:category,
-								author:author,
-								body:body
-    						}
-    					});
-    					if(post){
-    			    		res.status(200).json({message:"Post Updated",post:post});
-    					} else {
-    						res.status(422).json({
-    							message:"Post not found"
-    						});
-    					}
-    				}
-    				catch(error){
-    			    	res.status(400).json({message:"Could not update post"});
-    				}
-    		} else {
-    			res.status(422).json({
-    				message:"invalid inputs"
-    			});
-    		}
-    	} else {
-    		res.status(422).json({
-    			message:"Invalid ID"
-    		});
-    	}
-
-    },
-    delete:async (req,res)=>{
-    	let { id } = req.params;
-    	if(id){
-    		try{
-    			let post = await Post.findByIdAndDelete(id);
-    			if(post){
-    				res.status(200).json({message:"Post Deleted",post:post});
-    			} else {
-    				res.status(422).json({
-    					message:"Post not found"
-    				});
-    			}
-
-    		}
-    		catch(error){
-				res.status(400).json({message:"Could not delete post"});
-    		}
-    	} else {
-    		res.status(422).json({
-    			message:"Invalid ID"
-    		});
-    	}
+    if (vendor.vendorPassword!== vendor) {
+        res
+            .status(201)
+            .json({
+                success: false,
+                message: 'Invalid credentials',
+            });
     }
+    else{
+        sendVendorTokenResponse(vendor, 200, res);
+    }
+});
+
+//------------------LOGOUT--------------
+exports.vendorLogout = asyncHandler(async (req, res, next) => {
+    res.cookie("token", "none", {
+        expires: new Date(Date.now() + 10 * 1000),
+        httpOnly: true,
+    });
+
+    res.status(200).json({
+        success: true,
+        data: "vendor Logged out",
+    });
+});
+
+//-------------------------CURRENT customer DETAILS-----------
+
+exports.getVendor = asyncHandler(async (req, res, next) => {
+    const customer = await Vendor.findById(req.vendor.id);
+    res.status(200).json({
+        success: true,
+        data: customer,
+    });
+});
+
+// Get token from model , create cookie and send response
+const sendVendorTokenResponse = (vendor, statusCode, res) => {
+
+    const token = vendor.getSignedJwtToken();
+
+    const options = {
+        //Cookie will expire in 30 days
+        expires: new Date(
+            Date.now() + process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000
+        ),
+        httpOnly: true,
+    };
+
+    // Cookie security is false .if you want https then use this code. do not use in development time
+    if (process.env.NODE_ENV === "proc") {
+        options.secure = true;
+    }
+
+    //we have created a cookie with a token
+    res
+        .status(statusCode)
+        .cookie("token", token, options) // key , value ,options
+        .json({
+            success: true,
+            token,
+        });
 
 };

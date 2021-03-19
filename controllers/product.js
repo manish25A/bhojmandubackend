@@ -12,7 +12,7 @@ exports.createProduct = asyncHandler(async (req, res, next) => {
   const product = await Product.create({...req.body,vendor:req.user._id});
 
   if (!product) {
-    return next(new ErrorResponse("Error adding student"), 404);
+    return next(new ErrorResponse("Error adding product"), 404);
   }
 
   res.status(201).json({
@@ -21,18 +21,18 @@ exports.createProduct = asyncHandler(async (req, res, next) => {
   });
 });
 
-//-------------------Display all products
-
-
-exports.getProducts = asyncHandler(async (req, res, next) => {
-  const products = await Student.find({}).select('vendor');
-
-  res.status(201).json({
-    success: true,
-    count: products.length,
-    data: products,
-  });
-});
+// //-------------------Display all products
+//
+//
+// exports.getProducts = asyncHandler(async (req, res, next) => {
+//   const products = await Product.find({}).select('vendor');
+//
+//   res.status(201).json({
+//     success: true,
+//     count: products.length,
+//     data: products,
+//   });
+// });
 
 //-------------------Display all products of a vendor
 
@@ -46,7 +46,7 @@ exports.getVendorProducts = asyncHandler(async (req, res, next) => {
   });
 });
 
-// -----------------FIND Student BY ID-------------------
+// -----------------FIND Product BY ID-------------------
 
 exports.getStudentById = asyncHandler(async (req, res, next) => {
   const product = await Product.findById({_id:req.params.id, vendor:req.user._id}).populate('customer');
@@ -67,7 +67,7 @@ exports.deleteStudent = asyncHandler(async (req, res, next) => {
   const product = await Product.findById(req.params.id);
 
   if (!product) {
-    return next(new ErrorResponse(`No student found `), 404);
+    return next(new ErrorResponse(`No product found `), 404);
   }
 
   await product.remove();
@@ -81,11 +81,11 @@ exports.deleteStudent = asyncHandler(async (req, res, next) => {
 
 // ------------------UPLOAD IMAGE-----------------------
 
-exports.StudentPhotoUpload = asyncHandler(async (req, res, next) => {
-  const student = await Student.findById(req.params.id);
+exports.productImageUpload = asyncHandler(async (req, res, next) => {
+  const product = await Product.findById(req.params.id);
 
-  console.log(student);
-  if (!student) {
+  console.log(product);
+  if (!product) {
     return next(new ErrorResponse(`No student found with ${req.params.id}`), 404);
   }
 
@@ -111,16 +111,16 @@ exports.StudentPhotoUpload = asyncHandler(async (req, res, next) => {
     );
   }
 
-  file.name = `photo_${student.id}${path.parse(file.name).ext}`;
+  file.name = `photo_${product.id}${path.parse(file.name).ext}`;
 
-  file.mv(`${process.env.FILE_UPLOAD_PATH}/${file.name}`, async (err) => {
+  await file.mv(`${process.env.FILE_UPLOAD_PATH}/${file.name}`, async (err) => {
     if (err) {
       console.err(err);
       return next(new ErrorResponse(`Problem with file upload`, 500));
     }
 
     //insert the filename into database
-    await Student.findByIdAndUpdate(req.params.id, {
+    await Product.findByIdAndUpdate(req.params.id, {
       photo: file.name,
     });
   });
