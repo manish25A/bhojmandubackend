@@ -2,14 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="82208bf5-13e4-4ad7-8a02-96f8e758bce3" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/controllers/product.js" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/product.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controllers/user.js" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/user.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/customer.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/customer.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/product.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/product.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/customerRoute.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/customerRoute.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/productRoute.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/productRoute.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -73,7 +68,8 @@
       <workItem from="1616176858020" duration="803000" />
       <workItem from="1616189949083" duration="14237000" />
       <workItem from="1616227903310" duration="689000" />
-      <workItem from="1616394804554" duration="621000" />
+      <workItem from="1616394804554" duration="624000" />
+      <workItem from="1616396936754" duration="19000" />
     </task>
     <task id="LOCAL-00001" summary="updated project">
       <created>1615701199336</created>
