@@ -3,10 +3,9 @@ const  router = express.Router();
 
 const {
     createProduct,
-    getProducts,
-    getStudentById,
-    deleteStudent,
-    StudentPhotoUpload,
+    getProductById,
+    deleteProduct,
+    productImageUpload,
     getVendorProducts
 } = require("../controllers/product");
 
@@ -16,18 +15,18 @@ router.route("/getProducts/:fname").get(getVendorProducts);
 
 router
     .route("/")
-    .get(protect,getProducts)
+    // .get(protect,getProducts)
     .post(protect,createProduct);
 
 
 router
     .route("/:id/photo")
-    .put(protect, StudentPhotoUpload);
+    .put(protect, productImageUpload);
 
 router
     .route("/:id")
-    .get(protect,getStudentById)
-    .delete(protect, deleteStudent);
+    .get(protect,getProductById)
+    .delete(protect, deleteProduct);
 
 
 module.exports = router
@@ -97,7 +96,7 @@ module.exports = router
 // 		res.status(500).json({ message: error });
 // 	  });
 //   });
-  
+
 //   ////for retriving data
 //   ////retriving all data and displaying
 //   router.get('/product/all', function (req, res) {

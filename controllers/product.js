@@ -48,7 +48,7 @@ exports.getVendorProducts = asyncHandler(async (req, res, next) => {
 
 // -----------------FIND Product BY ID-------------------
 
-exports.getStudentById = asyncHandler(async (req, res, next) => {
+exports.getProductById = asyncHandler(async (req, res, next) => {
   const product = await Product.findById({_id:req.params.id, vendor:req.user._id}).populate('customer');
 
   if (!product) {
@@ -63,7 +63,7 @@ exports.getStudentById = asyncHandler(async (req, res, next) => {
 
 // -----------------DELETE STUDENT------------------------
 
-exports.deleteStudent = asyncHandler(async (req, res, next) => {
+exports.deleteProduct = asyncHandler(async (req, res, next) => {
   const product = await Product.findById(req.params.id);
 
   if (!product) {

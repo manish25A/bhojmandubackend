@@ -1,7 +1,9 @@
 const crypto = require("crypto"); //to generate the token and hash it
 const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs");
+const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+SALT_WORK_FACTOR=10;
+MAX_LOGIN_ATTEMPTS = 5, LOCK_TIME = 2 * 60 * 60 * 1000;
 
 const CustomerSchema = new mongoose.Schema({
     fname : {
@@ -16,7 +18,7 @@ const CustomerSchema = new mongoose.Schema({
         type: String,
         unique : true,
         trim : true,
-        require:[true,'Enter email']
+        required:[true,'Enter email']
     },
     password: {
         type: String,
@@ -24,11 +26,25 @@ const CustomerSchema = new mongoose.Schema({
         minlength: 6,
         select: false, // it will not return the password when quering
       },
+
       createdAt: {
         type: Date,
         default: Date.now,
-      }
+      },
+      loginAttempts:{type:Number, required:true,default:0},
+    lockUntil:{type:Number}
 });
+
+CustomerSchema.statics.failedLogin = {
+    NOT_FOUND: 0,
+    PASSWORD_INCORRECT: 1,
+    MAX_ATTEMPTS: 2
+};
+CustomerSchema.virtual('isLocked').get(function() {
+// check for a future lockUntil timestamp
+    return !!(this.lockUntil && this.lockUntil > Date.now());
+});
+
 
 CustomerSchema.methods.getSignedJwtToken = function () {
     return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
@@ -37,8 +53,8 @@ CustomerSchema.methods.getSignedJwtToken = function () {
   };
   
   //Match customer entered password to hashed password in database
-  CustomerSchema.methods.matchPassword = async function (enteredPassword) {
-    return await bcrypt.compare(enteredPassword, this.password);
+  CustomerSchema.methods.matchPassword = async  (password,hashPassword )=> {
+    return await bcrypt.compareSync(password, hashPassword);
   };
   
   //Generate and hash password token
