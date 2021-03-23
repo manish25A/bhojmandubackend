@@ -52,10 +52,7 @@ exports.getVendorProducts = asyncHandler(async (req, res, next) => {
 // -----------------FIND Product BY ID-------------------
 
 exports.getProductById = asyncHandler(async (req, res, next) => {
-  const product = await Product.findById({
-    _id: req.params.id,
-    vendor: req.user._id,
-  }).populate('customer');
+  const product = await Product.findById({_id:req.params.id, vendor:req.user._id}).populate('customer');
 
   if (!product) {
     return next(new ErrorResponse('Student not found'), 404);
