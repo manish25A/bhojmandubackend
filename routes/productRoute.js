@@ -1,3 +1,30 @@
+const express = require('express');
+const router = express.Router();
+
+const {
+  createProduct,
+  getProducts,
+  getProductById,
+  deleteProduct,
+  productImageUpload,
+  getVendorProducts,
+} = require('../controllers/product');
+
+const { protect } = require('../middleware/auth');
+
+router.route('/getProducts/:fname').get(getVendorProducts);
+
+router.route('/').get(protect, getProducts).post(protect, createProduct);
+
+router.route('/:id/photo').put(protect, productImageUpload);
+
+router
+  .route('/:id')
+  .get(protect, getProductById)
+  .delete(protect, deleteProduct);
+
+module.exports = router;
+
 // const express = require('express');
 // const router = express.Router();
 // const Product = require('../models/product');
@@ -61,7 +88,7 @@
 // 		res.status(500).json({ message: error });
 // 	  });
 //   });
-  
+
 //   ////for retriving data
 //   ////retriving all data and displaying
 //   router.get('/product/all', function (req, res) {

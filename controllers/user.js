@@ -1,57 +1,64 @@
 const asyncHandler = require("../middleware/async");
 const ErrorResponse = require("../utils/errorResponse.js");
 const Customer = require("../models/customer");
-const crypto = require("crypto");
-
+const bcrypt=require("bcryptjs")
 //--------------------------REGISTER customer-----------------
 
 exports.register = asyncHandler(async (req, res, next) => {
-  const { fname,lname,email,password } = req.body;
-  const customer = await customer.create({
-   fname,
-   lname,
-   email,
-   password,
-  });
+  try{
+  const { fname, lname, email, password } = req.body;
+  const hashedPassword = await bcrypt.hash(password, 10)
+  console.log(hashedPassword);
+    const customer = await Customer.create({
+      fname,
+      lname,
+      email,
+      password:hashedPassword,
+    });
 
-  sendTokenResponse(customer, 200, res);
-});
+    sendTokenResponse(customer, 200, res);
+  }catch {
+    return next(new ErrorResponse("Email already exists"), 500);
+
+    
+  }
+
+  });
 
 //-------------------LOGIN-------------------
 
 exports.login = asyncHandler(async (req, res, next) => {
-  const { email, password } = req.body;
+  const {email, password} = req.body;
 
   if (!email || !password) {
-    return next(new ErrorResponse("Please provide customername and password"), 400);
+    return next(new ErrorResponse("Please provide customer email and password"), 400);
   }
 
   // Check customer
-  const customer = await Customer.findOne({ email: email }).select("+password");
+  const customer = await Customer.findOne({email: email}).select("+password");
   //because in password field we have set the property select:false , but here we need as password so we added + sign
 
   if (!customer) {
     res
-    .status(201)
-    .json({
-      success: false,
-      message: 'Invalid credentails customer',
-    });  
+        .status(201)
+        .json({
+          success: false,
+          message: 'Customer not found',
+        });
   }
+  bcrypt.compare(
+      password,
+      customer.password,
+      function (err, result) {
+        if (result === false) {
+          return res
+              .status(403)
+              .json({success: false, message: 'Invalid password '})
+        } else {
+          sendTokenResponse(customer, 200, res)
+        }
+      });
 
-  // const isMatch = await customer.matchPassword(password); // decrypt password
-  
-  if (customer.password!= password) {
-    res
-    .status(201)
-    .json({
-      success: false,
-      message: 'Invalid credentails',
-    });
-  }
- else{
-  sendTokenResponse(customer, 200, res);
-}
 });
 
 //------------------LOGOUT--------------
@@ -70,7 +77,7 @@ exports.logout = asyncHandler(async (req, res, next) => {
 //-------------------------CURRENT customer DETAILS-----------
 
 exports.getMe = asyncHandler(async (req, res, next) => {
-  const customer = await customer.findById(req.customer.id);
+  const customer = await Customer.findById(req.customer.id);
   res.status(200).json({
     success: true,
     data: customer,
@@ -79,7 +86,7 @@ exports.getMe = asyncHandler(async (req, res, next) => {
 
 // Get token from model , create cookie and send response
 const sendTokenResponse = (customer, statusCode, res) => {
- 
+
   const token = customer.getSignedJwtToken();
 
   const options = {

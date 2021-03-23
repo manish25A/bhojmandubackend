@@ -9,18 +9,17 @@ const errorHandler = require("./middleware/errors");
 const dotenv = require("dotenv");
 const cors = require("cors");
 const createError = require("http-errors");
+
 dotenv.config({
   path: "./bin/config.env",
 });
-
-
-
 // Connect to mongoDB database
 connectDB();
 
 // Load routes files
 const customerRoute = require("./routes/customerRoute");
-// const productRoute =require("./routes/productRoute")
+const productRoute =require("./routes/productRoute");
+const vendorRoute=require("./routes/vendorRoute");
 
 const {
   urlencoded
@@ -43,19 +42,23 @@ app.use(cookieParser());
 //File upload
 app.use(fileupload());
 
+app.use("/customer/auth/",customerRoute);
+app.use("/product/",productRoute);
+app.use("/vendor/auth/",vendorRoute);
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
 });
-
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
-});
+//
+// // error handler
+// app.use(function(err, req, res, next) {
+//   // set locals, only providing error in development
+//   res.locals.message = err.message;
+//   res.locals.error = req.app.get('env') === 'development' ? err : {};
+//
+//   // render the error page
+//   res.status(err.status || 500);
+//   res.render('error');
+// });
 module.exports = app;
