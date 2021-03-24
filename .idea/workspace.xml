@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="82208bf5-13e4-4ad7-8a02-96f8e758bce3" name="Default Changelist" comment="" />
+    <list default="true" id="82208bf5-13e4-4ad7-8a02-96f8e758bce3" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
+    <list id="f5dbac44-9299-40ac-b028-6f7e656290a9" name="adding wrong password limitations" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -15,6 +18,11 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="Development" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="1pjVLb9rBJrCNomHySLBYps6KyK" />
@@ -33,7 +41,7 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="javascript.nodejs.core.library.configured.version" value="15.10.0" />
     <property name="javascript.nodejs.core.library.typings.version" value="14.14.35" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../t1---frontend-manish25A" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/bin/www" />
     <property name="nodejs_interpreter_path" value="node" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
@@ -44,6 +52,14 @@
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$" />
     </key>
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="NodeJSConfigurationType" path-to-js-file="www">
+      <method v="2" />
+    </configuration>
+    <configuration name="www" type="NodeJSConfigurationType" nameIsGenerated="true" path-to-js-file="bin/www" working-dir="$PROJECT_DIR$">
+      <method v="2" />
+    </configuration>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -65,8 +81,9 @@
       <workItem from="1616176858020" duration="803000" />
       <workItem from="1616189949083" duration="14237000" />
       <workItem from="1616227903310" duration="689000" />
-      <workItem from="1616394804554" duration="624000" />
-      <workItem from="1616396936754" duration="19000" />
+      <workItem from="1616394804554" duration="621000" />
+      <workItem from="1616513069570" duration="465000" />
+      <workItem from="1616515479814" duration="808000" />
     </task>
     <task id="LOCAL-00001" summary="updated project">
       <created>1615701199336</created>
@@ -103,7 +120,14 @@
       <option name="project" value="LOCAL" />
       <updated>1616190802540</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="added limitations">
+      <created>1616515689938</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1616515689938</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -114,7 +138,19 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="origin/master" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>
@@ -128,6 +164,8 @@
     <MESSAGE value="connected product and vendor to know which vendor inserted which product" />
     <MESSAGE value="get data by vendor name" />
     <MESSAGE value="added and updated vendor routes and controllers" />
-    <option name="LAST_COMMIT_MESSAGE" value="added and updated vendor routes and controllers" />
+    <MESSAGE value="updated gitignore and readme" />
+    <MESSAGE value="added limitations" />
+    <option name="LAST_COMMIT_MESSAGE" value="added limitations" />
   </component>
 </project>

@@ -1,76 +1,67 @@
-const asyncHandler = require("../middleware/async");
-const ErrorResponse = require("../utils/errorResponse.js");
-const Customer = require("../models/customer");
-const bcrypt=require("bcryptjs")
+const asyncHandler = require('../middleware/async');
+const ErrorResponse = require('../utils/errorResponse.js');
+const Customer = require('../models/customer');
+const bcrypt = require('bcryptjs');
 //--------------------------REGISTER customer-----------------
 
 exports.register = asyncHandler(async (req, res, next) => {
-  try{
-  const { fname, lname, email, password } = req.body;
-  const hashedPassword = await bcrypt.hash(password, 10)
+  const { fname, lname, email } = await req.body;
+  const salt = await bcrypt.genSaltSync(10);
+  const hashedPassword = await bcrypt.hash(req.body.password, salt);
   console.log(hashedPassword);
-    const customer = await Customer.create({
-      fname,
-      lname,
-      email,
-      password:hashedPassword,
-    });
-
-    sendTokenResponse(customer, 200, res);
-  }catch {
-    return next(new ErrorResponse("Email already exists"), 500);
-
-    
-  }
-
+  const customer = await Customer.create({
+    fname,
+    lname,
+    email,
+    password: hashedPassword,
   });
+
+  sendTokenResponse(customer, 200, res);
+});
 
 //-------------------LOGIN-------------------
 
 exports.login = asyncHandler(async (req, res, next) => {
-  const {email, password} = req.body;
+  const { email, password } = req.body;
 
   if (!email || !password) {
-    return next(new ErrorResponse("Please provide customer email and password"), 400);
+    return next(
+      new ErrorResponse('Please provide customer email and password'),
+      400
+    );
   }
 
   // Check customer
-  const customer = await Customer.findOne({email: email}).select("+password");
+  const customer = await Customer.findOne({ email: email }).select('+password');
   //because in password field we have set the property select:false , but here we need as password so we added + sign
 
   if (!customer) {
-    res
-        .status(201)
-        .json({
-          success: false,
-          message: 'Customer not found',
-        });
+    res.status(201).json({
+      success: false,
+      message: 'Customer not found',
+    });
   }
-  bcrypt.compare(
-      password,
-      customer.password,
-      function (err, result) {
-        if (result === false) {
-          return res
-              .status(403)
-              .json({success: false, message: 'Invalid password '})
-        } else {
-          sendTokenResponse(customer, 200, res)
-        }
-      });
-
+  bcrypt.compare(password, customer.password, function (err, result) {
+    if (result === false) {
+      return res
+        .status(403)
+        .json({ success: false, message: 'Invalid password ' });
+    } else {
+      sendTokenResponse(customer, 200, res);
+    }
+  });
 });
 
 //------------------LOGOUT--------------
 exports.logout = asyncHandler(async (req, res, next) => {
-  res.cookie("token", "none", {
+  res.cookie('token', 'none', {
     expires: new Date(Date.now() + 10 * 1000),
     httpOnly: true,
   });
 
   res.status(200).json({
     success: true,
-    data: "customer Logged out",
+    data: 'customer Logged out',
   });
 });
 
@@ -86,7 +77,6 @@ exports.getMe = asyncHandler(async (req, res, next) => {
 
 // Get token from model , create cookie and send response
 const sendTokenResponse = (customer, statusCode, res) => {
-
   const token = customer.getSignedJwtToken();
 
   const options = {
@@ -98,17 +88,16 @@ const sendTokenResponse = (customer, statusCode, res) => {
   };
 
   // Cookie security is false .if you want https then use this code. do not use in development time
-  if (process.env.NODE_ENV === "proc") {
+  if (process.env.NODE_ENV === 'proc') {
     options.secure = true;
   }
 
   //we have created a cookie with a token
   res
     .status(statusCode)
-    .cookie("token", token, options) // key , value ,options
+    .cookie('token', token, options) // key , value ,options
     .json({
       success: true,
       token,
     });
-
 };

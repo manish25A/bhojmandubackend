@@ -1,5 +1,5 @@
-const express = require('express');
-const router = express.Router();
+const express = require("express");
+const  router = express.Router();
 
 const {
     createProduct,
@@ -9,16 +9,15 @@ const {
     getVendorProducts
 } = require("../controllers/product");
 
-const { protect } = require('../middleware/auth');
+const { protect } = require("../middleware/auth");
 
-router.route('/getProducts/:fname').get(getVendorProducts);
+router.route("/getProducts/:fname").get(getVendorProducts);
 
 router
     .route("/")
     // .get(protect,getProducts)
     .post(protect,createProduct);
 
-router.route('/:id/photo').put(protect, productImageUpload);
 
 router
     .route("/:id/photo")
@@ -32,7 +31,7 @@ router
 
 module.exports = router
 
-module.exports = router;
+
 
 // const express = require('express');
 // const router = express.Router();
