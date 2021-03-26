@@ -2,13 +2,17 @@ const asyncHandler = require('../middleware/async');
 const ErrorResponse = require('../utils/errorResponse.js');
 const Customer = require('../models/customer');
 const bcrypt = require('bcryptjs');
-//--------------------------REGISTER customer-----------------
+const router = require('../routes/customerRoute');
+const jwt = require('jsonwebtoken');
+
+// --------------------------REGISTER customer-----------------
 
 exports.register = asyncHandler(async (req, res, next) => {
-  const { fname, lname, email } = await req.body;
+  console.log(req.body);
+  const { fname, lname, email, password } = await req.body;
   const salt = await bcrypt.genSaltSync(10);
   const hashedPassword = await bcrypt.hash(req.body.password, salt);
-  console.log(hashedPassword);
+  // console.log(hashedPassword);
   const customer = await Customer.create({
     fname,
     lname,
@@ -19,8 +23,7 @@ exports.register = asyncHandler(async (req, res, next) => {
   sendTokenResponse(customer, 200, res);
 });
 
-//-------------------LOGIN-------------------
-
+//logintemp
 exports.login = asyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
 
@@ -51,7 +54,34 @@ exports.login = asyncHandler(async (req, res, next) => {
     }
   });
 });
+//-------------------LOGIN-------------------
 
+// exports.login = asyncHandler(async (req, res, next) => {
+//   const { email, password } = req.body;
+//   await Customer.findOne({ email: email }).then(function (customerData) {
+//     if (customerData == null) {
+//       return res.status(201).json({ success: false, msg: 'Invalid User!!' });
+//     }
+
+//     bcrypt.compare(password, customerData.password, function (err, result) {
+//       if (result === false) {
+//         return res
+//           .status(403)
+//           .json({ success: false, message: 'Invalid password ' });
+//       }
+//       Customer.find({ email: email }).then(function (data) {
+//         const token = jwt.sign({ id: this._id }, 'secretkey');
+//         res.status(200).json({
+//           success: true,
+//           msg: 'Login Successful',
+//           token: token,
+//           data: data,
+//           id: this._id,
+//         });
+//       });
+//     });
+//   });
+// });
 //------------------LOGOUT--------------
 exports.logout = asyncHandler(async (req, res, next) => {
   res.cookie('token', 'none', {
@@ -68,7 +98,7 @@ exports.logout = asyncHandler(async (req, res, next) => {
 //-------------------------CURRENT customer DETAILS-----------
 
 exports.getMe = asyncHandler(async (req, res, next) => {
-  const customer = await Customer.findById(req.customer.id);
+  const customer = await Customer.findById(req.user._id);
   res.status(200).json({
     success: true,
     data: customer,
@@ -78,7 +108,6 @@ exports.getMe = asyncHandler(async (req, res, next) => {
 // Get token from model , create cookie and send response
 const sendTokenResponse = (customer, statusCode, res) => {
   const token = customer.getSignedJwtToken();
-
   const options = {
     //Cookie will expire in 30 days
     expires: new Date(
