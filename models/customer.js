@@ -70,9 +70,9 @@ CustomerSchema.methods.getSignedJwtToken = function () {
     expiresIn: process.env.JWT_EXPIRE,
   });
 };
-// CustomerSchema.methods.getId = function (data) {
-//   return this._id;
-// };
+CustomerSchema.methods.getId = function (data) {
+  return this._id;
+};
 // CustomerSchema.methods.getData = function (data) {
 //   return { fname: this.fname, lname: this.lname };
 // };

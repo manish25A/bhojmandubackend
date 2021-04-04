@@ -11,7 +11,7 @@ const cors = require('cors');
 const createError = require('http-errors');
 
 dotenv.config({
-  path: './bin/config.env',
+	path: './bin/config.env',
 });
 // Connect to mongoDB database
 connectDB();
@@ -20,6 +20,7 @@ connectDB();
 const customerRoute = require('./routes/customerRoute');
 const productRoute = require('./routes/productRoute');
 const vendorRoute = require('./routes/vendorRoute');
+const cartRoute = require('./routes/cartRoute');
 
 const { urlencoded } = require('express');
 
@@ -28,8 +29,8 @@ const app = express();
 //logger
 app.use(morgan('dev'));
 var corsOptions = {
-  origin: 'http://localhost:3000',
-  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+	origin: 'http://localhost:3000',
+	optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
 };
 
 //using cors for react
@@ -37,10 +38,10 @@ var corsOptions = {
 //Body parser , which allows to receive body data from postman
 app.use(express.json());
 app.use(
-  express.urlencoded({
-    urlencoded: true,
-    extended: false,
-  })
+	express.urlencoded({
+		urlencoded: true,
+		extended: false,
+	})
 );
 app.use(cookieParser());
 
@@ -51,10 +52,11 @@ app.use(cors(corsOptions));
 app.use('/customer/auth/', customerRoute);
 app.use('/product/', productRoute);
 app.use('/vendor/auth/', vendorRoute);
+app.use('/', cartRoute);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
-  next(createError(404));
+	next(createError(404));
 });
 //
 // // error handler

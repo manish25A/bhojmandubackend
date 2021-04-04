@@ -8,7 +8,6 @@ const jwt = require('jsonwebtoken');
 // --------------------------REGISTER customer-----------------
 
 exports.register = asyncHandler(async (req, res, next) => {
-  console.log(req.body);
   const { fname, lname, email, password } = await req.body;
   const salt = await bcrypt.genSaltSync(10);
   const hashedPassword = await bcrypt.hash(req.body.password, salt);
@@ -108,6 +107,7 @@ exports.getMe = asyncHandler(async (req, res, next) => {
 // Get token from model , create cookie and send response
 const sendTokenResponse = (customer, statusCode, res) => {
   const token = customer.getSignedJwtToken();
+  const id = customer.getId();
   const options = {
     //Cookie will expire in 30 days
     expires: new Date(
@@ -124,9 +124,10 @@ const sendTokenResponse = (customer, statusCode, res) => {
   //we have created a cookie with a token
   res
     .status(statusCode)
-    .cookie('token', token, options) // key , value ,options
+    .cookie('token', token, id, options) // key , value ,options
     .json({
       success: true,
       token,
+      id,
     });
 };

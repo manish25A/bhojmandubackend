@@ -2,26 +2,23 @@ const express = require('express');
 const router = express.Router();
 
 const {
-  createProduct,
-  getProducts,
-  getProductById,
-  deleteProduct,
-  productImageUpload,
-  getVendorProducts,
+	createProduct,
+	getProducts,
+	getProductById,
+	deleteProduct,
+	productImageUpload,
+	getVendorProducts,
 } = require('../controllers/product');
 
 const { protect } = require('../middleware/auth');
 
 router.route('/getProducts/:fname').get(getVendorProducts);
 
-router.route('/').get(protect, getProducts).post(protect, createProduct);
+router.route('/').get(getProducts).post(protect, createProduct);
 
 router.route('/:id/photo').put(protect, productImageUpload);
 
-router
-  .route('/:id')
-  .get(protect, getProductById)
-  .delete(protect, deleteProduct);
+router.route('/:id').get(getProductById).delete(protect, deleteProduct);
 
 module.exports = router;
 
