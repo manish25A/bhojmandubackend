@@ -52,7 +52,7 @@ app.use(cors(corsOptions));
 app.use('/customer/auth/', customerRoute);
 app.use('/product/', productRoute);
 app.use('/vendor/auth/', vendorRoute);
-app.use('/', cartRoute);
+app.use('/cart/', cartRoute);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

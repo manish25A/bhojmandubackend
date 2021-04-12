@@ -1,5 +1,6 @@
 const ErrorResponse = require('../utils/errorResponse');
 const Product = require('../models/product');
+const Cart = require('../models/cart');
 const asyncHandler = require('../middleware/async');
 //To get the file name extension line .jpg,.png
 const path = require('path');
@@ -38,7 +39,7 @@ exports.getProducts = asyncHandler(async (req, res, next) => {
 exports.getVendorProducts = asyncHandler(async (req, res, next) => {
 	const product = await Product.find({}).populate({
 		path: 'vendorId',
-		match: { fname: req.params.fname },
+		match: { vendorName: req.params.vendorName },
 	});
 	let products = [];
 	product.forEach((p) => {
@@ -46,7 +47,6 @@ exports.getVendorProducts = asyncHandler(async (req, res, next) => {
 			products.push(p);
 		}
 	});
-
 	res.status(201).json({
 		success: true,
 		count: products.length,
@@ -63,7 +63,7 @@ exports.getProductById = asyncHandler(async (req, res, next) => {
 	}); //.populate('customer');
 
 	if (!product) {
-		return next(new ErrorResponse('Product not found'), 404);
+		return next(new ErrorResponse('Products not found'), 404);
 	}
 
 	res.status(200).json({
@@ -72,7 +72,7 @@ exports.getProductById = asyncHandler(async (req, res, next) => {
 	});
 });
 
-// -----------------DELETE STUDENT------------------------
+// -----------------DELETE product------------------------
 
 exports.deleteProduct = asyncHandler(async (req, res, next) => {
 	const product = await Product.findById(req.params.id);
@@ -97,10 +97,7 @@ exports.productImageUpload = asyncHandler(async (req, res, next) => {
 
 	console.log(product);
 	if (!product) {
-		return next(
-			new ErrorResponse(`No student found with ${req.params.id}`),
-			404
-		);
+		return next(new ErrorResponse(`No data found with ${req.params.id}`), 404);
 	}
 
 	if (!req.files) {
@@ -141,5 +138,48 @@ exports.productImageUpload = asyncHandler(async (req, res, next) => {
 	res.status(200).json({
 		success: true,
 		data: file.name,
+	});
+});
+
+//getadmin products
+exports.getAdminProducts = asyncHandler(async (req, res, next) => {
+	await Product.find({ vendorId: req.user._id })
+		.populate('vendorId')
+		.then(function (cartItemDisplay) {
+			res.status(201).json({
+				success: true,
+				data: cartItemDisplay,
+			});
+		})
+		.catch((err) => {
+			res.status(500).json({ success: false, message: err });
+		});
+});
+
+//update products
+exports.productUpdate = asyncHandler(async (req, res, next) => {
+	const productId = req.params.id;
+	const { name, price, desc } = req.body;
+
+	Product.findOne({ _id: productId }).then((productUpdate) => {
+		Product.updateOne(
+			{ _id: productId },
+			{ name: name, price: price, desc: desc }
+		)
+			.then(function (result) {
+				console.log(result);
+				res.status(200).json({
+					data: 'product updated successfully',
+					success: true,
+					result: result,
+				});
+			})
+			.catch((err) => {
+				console.log(err);
+				res.status(500).json({
+					data: 'update failed',
+					success: false,
+				});
+			});
 	});
 });

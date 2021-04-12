@@ -2,22 +2,23 @@ const express = require('express');
 const router = express.Router();
 
 const {
-  vendorRegister,
-  vendorLogin,
-  getVendor,
-  getVendors,
-  vendorLogout,
+	vendorRegister,
+	vendorLogin,
+	getVendor,
+	getVendors,
+	vendorLogout,
+	vendorUpdate,
+	vendorImageUpload,
 } = require('../controllers/vendor');
 
-const { protect } = require('../middleware/vendorauth');
+const { vendorprotect } = require('../middleware/vendorauth');
 
 router.post('/register', vendorRegister);
 router.route('/').get(getVendors);
-
+router.route('/update').put(vendorprotect, vendorUpdate);
+router.route('/photo/:id').put(vendorprotect, vendorImageUpload);
 router.post('/login', vendorLogin);
-router.get('/me', protect, getVendor);
-// router.post("/forgotpassword", forgotPassword);
-// router.put("/resetpassword/:resettoken", resetPassword);
+router.get('/me', vendorprotect, getVendor);
 router.get('/logout', vendorLogout);
 
 module.exports = router;
