@@ -1,8 +1,8 @@
 //PROTECT THE MIDDLEWARE
-const jwt = require("jsonwebtoken");
-const asyncHandler = require("./async");
-const ErrorResponse = require("../utils/errorResponse.js");
-const Customer = require("../models/customer");
+const jwt = require('jsonwebtoken');
+const asyncHandler = require('./async');
+const ErrorResponse = require('../utils/errorResponse.js');
+const Customer = require('../models/customer');
 
 //Protect routes
 exports.protect = asyncHandler(async (req, res, next) => {
@@ -10,15 +10,15 @@ exports.protect = asyncHandler(async (req, res, next) => {
 
   if (
     req.headers.authorization &&
-    req.headers.authorization.startsWith("Bearer")
+    req.headers.authorization.startsWith('Bearer')
   ) {
     // Set token from Bearer token in header
-    token = req.headers.authorization.split(" ")[1];
+    token = req.headers.authorization.split(' ')[1];
   }
 
   //Make sure token exist
   if (!token) {
-    return next(new ErrorResponse("Not authorized to access this route", 401));
+    return next(new ErrorResponse('Not authorized to access this route', 401));
   }
 
   try {
@@ -28,6 +28,6 @@ exports.protect = asyncHandler(async (req, res, next) => {
     req.user = await Customer.findById(decoded.id);
     next();
   } catch (err) {
-    return next(new ErrorResponse("Not authorized to access this route", 401));
+    return next(new ErrorResponse('Not authorized to access this route', 401));
   }
 });
